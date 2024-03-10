@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 
 class NewsPost(models.Model):
@@ -16,6 +17,9 @@ class NewsPost(models.Model):
     def __str__(self):
         return f'{self.title}: {self.category}: {self.Text[:20]} : {self.date_pub}'
 
+    def get_absolute_url(self):
+        return reverse('post_detail', args=[str(self.id)])
+
 
 # Категория, к которой будет привязываться Новость
 class Category(models.Model):
@@ -24,3 +28,4 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name.title()
+
