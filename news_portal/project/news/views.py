@@ -1,10 +1,14 @@
 from datetime import datetime
+from django.urls import reverse_lazy
 # Импортируем класс, который говорит нам о том,
 # что в этом представлении мы будем выводить список объектов из БД
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+
+from .forms import NewsForm
 from .models import NewsPost, Category
 from .filters import NewsPostFilter
 
+# ====== Новости =================================================================
 
 class NewsList(ListView):
     # Указываем модель, объекты которой мы будем выводить
@@ -17,7 +21,7 @@ class NewsList(ListView):
     # Это имя списка, в котором будут лежать все объекты.
     # Его надо указать, чтобы обратиться к списку объектов в html-шаблоне.
     context_object_name = 'newspost'
-    paginate_by = 2  # вот так мы можем указать количество записей на странице
+    paginate_by = 5  # вот так мы можем указать количество записей на странице
 
     def get_queryset(self):
         # Получаем обычный запрос
@@ -53,11 +57,32 @@ class NewsDetail(DetailView):
     # Название объекта, в котором будет выбранный пользователем продукт
     context_object_name = 'news'
 
+# Добавляем новое представление для создания товаров.
+class NewsCreate(CreateView):
+    # Указываем нашу разработанную форму
+    form_class = NewsForm
+    # модель товаров
+    model = NewsPost
+    # и новый шаблон, в котором используется форма.
+    template_name = 'post_edit.html'
+
+class NewsUpdate(UpdateView):
+    # Указываем нашу разработанную форму
+    form_class = NewsForm
+    # модель товаров
+    model = NewsPost
+    # и новый шаблон, в котором используется форма.
+    template_name = 'post_edit.html'
+class NewsDelete(DeleteView):
+    model = NewsPost
+    template_name = 'post_delete.html'
+    success_url = reverse_lazy('post_list')
+
 # ====== Поиск =================================================================
 class Search(ListView):
     model = NewsPost
     template_name = 'flatpages/search.html'
-    context_object_name = 'search'
+    context_object_name = 'newspost'
     filterset_class = NewsPostFilter
     paginate_by = 7
 
@@ -70,6 +95,6 @@ class Search(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['filter'] = self.filterset
-        context[
-            'categories'] = Category.objects.all()  # Получение всех категорий
+        context['categories'] = Category.objects.all()  # Получение всех категорий
+        context['filterset'] = self.filterset
         return context
