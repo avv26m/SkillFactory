@@ -1,20 +1,20 @@
 from django import forms
+from .models import Post
 from django.core.exceptions import ValidationError
 
-from .models import NewsPost
+from .models import Post
 
-class NewsForm(forms.ModelForm):
-    Text = forms.CharField(min_length=20)
+class PostForm(forms.ModelForm):
     class Meta:
-        model = NewsPost
-        fields = ['title','Text','category']
+        model = Post
+        fields = ['author', 'postCategory', 'title', 'text']
 
     def clean(self):
         cleaned_data = super().clean()
         title = cleaned_data.get("title")
-        Text = cleaned_data.get("Text")
+        text = cleaned_data.get("text")
 
-        if title == Text:
+        if title == text:
             raise ValidationError(
                 "Описание не должно быть идентично названию."
             )
