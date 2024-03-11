@@ -47,8 +47,7 @@ class PostsSearch(ListView):
         context['filterset'] = self.filterset
         return context
 
-class PostCreate(PermissionRequiredMixin, CreateView):
-    permission_required = ('newapp.add_post',)
+class PostCreate(CreateView):
     # raise_exception = True
     form_class = PostForm
     model = Post
@@ -63,15 +62,13 @@ class PostCreate(PermissionRequiredMixin, CreateView):
             post.categoryType = 'NW'
         return super().form_valid(form)
 
-class PostDelete(PermissionRequiredMixin, DeleteView):
-    permission_required = ('newapp.delete_post',)
+class PostDelete(DeleteView):
     model = Post
     template_name = 'post_delete.html'
     context_object_name = 'delete'
     success_url = reverse_lazy('posts')
 
-class PostUpdate(PermissionRequiredMixin, UpdateView):
-    permission_required = ('newapp.change_post',)
+class PostUpdate(UpdateView):
     form_class = PostForm
     model = Post
     template_name = 'post_edit.html'
