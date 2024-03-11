@@ -1,0 +1,18 @@
+{% extends 'flatpages/default.html' %}
+{% load custom_filters %}
+
+{% block title %}
+Post
+{% endblock title %}
+
+<!-- В контенте на странице мы выводим сам товар, идентификатор которого был передан в url -->
+{% block content %}
+<h1>{{ post.title }}</h1>
+<!-- <h1>{{ post.title|censor }}</h1> -->
+<h3>{{ post.dateCreation|date:'M d Y' }}</h3>
+<!--<h4>author: {{ post.author }}</h4>-->
+<!--<h5>rating: {{ post.rating }}</h5>-->
+{{ post.text }}
+<!-- {{ post.text|censor }} -->
+
+{% endblock content %}l>

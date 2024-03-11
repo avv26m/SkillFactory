@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'django.contrib.flatpages',
     'fpages',
     'newapp',
-    'news',
     'django_filters',
 ]
 
