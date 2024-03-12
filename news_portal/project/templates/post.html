@@ -5,14 +5,59 @@
 Post
 {% endblock title %}
 
-<!-- В контенте на странице мы выводим сам товар, идентификатор которого был передан в url -->
 {% block content %}
-<h1>{{ post.title }}</h1>
-<!-- <h1>{{ post.title|censor }}</h1> -->
-<h3>{{ post.dateCreation|date:'M d Y' }}</h3>
-<!--<h4>author: {{ post.author }}</h4>-->
-<!--<h5>rating: {{ post.rating }}</h5>-->
-{{ post.text }}
-<!-- {{ post.text|censor }} -->
+<h3>Все новости:</h3>
 
-{% endblock content %}l>
+<hr>
+
+<!-- <form action ="" method="get">
+    {{ filterset.form.as_p }}
+    <input type="submit" value="Найти" />
+</form> -->
+
+<!--&lt;!&ndash;<form action="" method="get" >-->
+<!--    {{ filterset.form.non_field_errors }}-->
+
+<!--    {{ filterset.form.name__icontains.errors }}-->
+<!--    <label for="{{ filterset.form.name__icontains.id_for_label }}">Search</label>-->
+<!--    <input-->
+<!--        id="{{ filterset.form.name__icontains.id }}"-->
+<!--        name="{{ filterset.form.name__icontains.name }}"-->
+<!--        value="{{ filterset.form.name__icontains.value }}"-->
+<!--        class="form-control"-->
+<!--    >-->
+<!--    <input type="submit" class="mt-3 btn-primary" value="Найти" />-->
+<!--</form>&ndash;&gt;-->
+{% if news %}
+<table>
+    <tr>
+    <td>Заголовок</td>
+    <td>Дата публикации</td>
+    <td>Описание</td>
+    </tr>
+    {% for i in news %}
+    <tr>
+        <td>{{ i.title}} </td>
+        <!-- <td>{{ i.title|censor}} </td> -->
+        <td>{{ i.dateCreation|date:'M d Y' }}</td>
+        <td>{{ i.text|truncatewords:20 }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<h2>Новостей нет!</h2>
+{% endif %}
+
+{% if page_obj.has_previous %}
+<a href="?{% url_replace page=1 %}">&laquo;</a>
+<a href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+{% endif %}
+
+
+{{ page_obj.number }}
+
+{% if page_obj.has_next %}
+<a href="?{% url_replace page=page_obj.next_page_number %}">{{ page_obj.next_page_number }}</a>
+<a href="?page={{ page_obj.paginator.num_pages }}"> &raquo;</a>
+{% endif %}
+{% endblock content %}

@@ -23,5 +23,4 @@ class PostFilter(FilterSet):
         model = Post
         fields = {
             'title': ['icontains'],
-            'dateCreation': ['gt'],
         }
