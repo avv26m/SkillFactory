@@ -53,6 +53,7 @@ class PostCreate(CreateView):
     model = Post
     template_name = 'post_create.html'
     context_object_name = 'create'
+    success_url = reverse_lazy('posts')
 
     def form_valid(self, form):
         post = form.save(commit=False)

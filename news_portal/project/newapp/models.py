@@ -20,6 +20,8 @@ class Author(models.Model):
         self.ratingAuthor = pRat *3 + cRat
         self.save()
 
+    def __str__(self):
+        return f'{self.authorUser}'
 
 class Category(models.Model):
     name = models.CharField(max_length=64, unique=True)
@@ -58,7 +60,7 @@ class Post(models.Model):
         return self.text[0:123] + '...'
 
     def __str__(self):
-        return f'{self.title.title()}: {self.text}'
+        return f'{self.title.title()}: {self.text}: {self.categoryType}'
 
     def get_absolute_url(self):
         return reverse('post/<int:pk>/', args=[str(self.id)])

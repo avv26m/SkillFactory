@@ -34,6 +34,7 @@ Post
     <td>Заголовок</td>
     <td>Дата публикации</td>
     <td>Описание</td>
+        <td>Категория</td>
     </tr>
     {% for i in news %}
     <tr>
@@ -41,6 +42,7 @@ Post
         <!-- <td>{{ i.title|censor}} </td> -->
         <td>{{ i.dateCreation|date:'M d Y' }}</td>
         <td>{{ i.text|truncatewords:20 }}</td>
+         <td>{{ i.categoryType }}</td>
     </tr>
     {% endfor %}
 </table>
