@@ -1,5 +1,5 @@
 from datetime import datetime
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.views.generic import ListView, DetailView, CreateView, DeleteView, UpdateView
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import PermissionRequiredMixin
@@ -47,8 +47,9 @@ class PostsSearch(ListView):
         context['filterset'] = self.filterset
         return context
 
-class PostCreate(LoginRequiredMixin, CreateView):
-    raise_exception = True
+class PostCreate(PermissionRequiredMixin, CreateView):
+    permission_required = ('newapp.add_post',)
+   # raise_exception = True
     form_class = PostForm
     model = Post
     template_name = 'post_create.html'
@@ -64,12 +65,14 @@ class PostCreate(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 class PostDelete(DeleteView):
+    permission_required = ('newapp.delete_post',)
     model = Post
     template_name = 'post_delete.html'
     context_object_name = 'delete'
     success_url = reverse_lazy('posts')
 
 class PostUpdate(UpdateView):
+    permission_required = ('newapp.change_post',)
     form_class = PostForm
     model = Post
     template_name = 'post_edit.html'
