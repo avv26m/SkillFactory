@@ -1,5 +1,5 @@
 from datetime import datetime
-
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, DetailView, CreateView, DeleteView, UpdateView
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import PermissionRequiredMixin
@@ -47,8 +47,8 @@ class PostsSearch(ListView):
         context['filterset'] = self.filterset
         return context
 
-class PostCreate(CreateView):
-    # raise_exception = True
+class PostCreate(LoginRequiredMixin, CreateView):
+    raise_exception = True
     form_class = PostForm
     model = Post
     template_name = 'post_create.html'
