@@ -1,15 +1,17 @@
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.mail import EmailMultiAlternatives
-from django.db.models.signals import post_save
+from django.db.models.signals import m2m_changed
 from django.dispatch import receiver
-from django.conf import settings
-
-from .models import Post
 
 
-@receiver(post_save, sender=Post)
-def product_created(instance, created, **kwargs):
-    if not created:
+
+from .models import PostCategory
+
+
+@receiver(m2m_changed, sender=PostCategory)
+def post_created(instance, **kwargs):
+    if kwargs['action'] != 'post_add':
         return
 
     emails = User.objects.filter(
@@ -27,7 +29,7 @@ def product_created(instance, created, **kwargs):
     html_content = (
         f'Заголовок: {instance.title}<br>'
         f'Текст: {instance.preview}<br><br>'
-        f'<a href="http://127.0.0.1{instance.get_absolute_url()}">'
+        f'<a href="http://127.0.0.1:8000{instance.get_absolute_url()}">'
         f'Перейти</a>'
     )
 
