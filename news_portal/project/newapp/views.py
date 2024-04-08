@@ -11,6 +11,7 @@ from .models import Post, Subscription, Category
 from .filters import PostFilter
 from .forms import PostForm
 
+from .tasks import send_email_task, weekly_send_email_task
 
 
 class PostsList(ListView):
@@ -63,6 +64,8 @@ class PostCreate(PermissionRequiredMixin, CreateView):
             post.categoryType = 'AR'
         elif self.request.path == '/news/create/':
             post.categoryType = 'NW'
+            post.save()
+            send_email_task.delay(post.pk)
         return super().form_valid(form)
 
 class PostDelete(DeleteView):
