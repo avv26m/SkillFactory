@@ -173,6 +173,7 @@ MANAGERS = (
 
 ADMINS = (
     ('Admin one', 'prj.product@yandex.ru'),
+    ('Admin two', 'prj.product@yandex.ru'),
 )
 
 APSCHEDULER_DATETIME_FORMAT = "N j, Y, f:s a"
