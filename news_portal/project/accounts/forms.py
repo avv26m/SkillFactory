@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from allauth.account.forms import SignupForm
-from django.core.mail import mail_managers
+from django.core.mail import mail_managers, mail_admins
 
 
 class SignUpForm(UserCreationForm):
@@ -26,6 +26,11 @@ class CustomSignupForm(SignupForm):
         user = super().save(request)
 
         mail_managers(
+            subject='Новый пользователь!',
+            message=f'Пользователь {user.username} зарегистрировался на сайте.'
+        )
+
+        mail_admins(
             subject='Новый пользователь!',
             message=f'Пользователь {user.username} зарегистрировался на сайте.'
         )
