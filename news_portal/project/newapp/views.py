@@ -1,4 +1,7 @@
 from datetime import datetime
+
+from django.http import HttpResponse
+from django.views import View
 from django.views.generic import ListView, DetailView, CreateView, DeleteView, UpdateView
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import PermissionRequiredMixin
@@ -12,6 +15,7 @@ from .filters import PostFilter
 from .forms import PostForm
 
 from .tasks import send_email_task, weekly_send_email_task
+from django.utils.translation import gettext as _ # импортируем функцию для перевода
 
 
 class PostsList(ListView):
@@ -112,3 +116,12 @@ def subscriptions(request):
         'subscriptions.html',
         {'categories': categories_with_subscriptions},
     )
+
+
+# Create your views here.
+
+class Index(View):
+    def get(self, request):
+        string = _('Hello world')
+
+        return HttpResponse(string)
