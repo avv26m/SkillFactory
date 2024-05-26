@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.db.models import Sum
 from django.urls import reverse
 
+from django.utils.translation import gettext as _
 
 class Author(models.Model):
     authorUser = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -41,9 +42,9 @@ class Post(models.Model):
     )
     categoryType = models.CharField(max_length=2, choices=CATEGORY_CHOICES, default=ARTICLE)
     dateCreation = models.DateTimeField(auto_now_add=True)
-    postCategory = models.ManyToManyField(Category, through='PostCategory')
-    title = models.CharField(max_length=128)
-    text = models.TextField()
+    postCategory = models.ManyToManyField(Category, through='PostCategory', verbose_name=_('post categories'))
+    title = models.CharField(max_length=128, verbose_name=_('post title'))
+    text = models.TextField(verbose_name=_('text body'))
     rating = models.SmallIntegerField(default=0)
 
 
