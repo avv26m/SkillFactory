@@ -1,0 +1,6 @@
+2024-05-26 15:34:38,252 INFO autoreload Watching for file changes with StatReloader
+2024-05-26 15:39:06,953 INFO autoreload Watching for file changes with StatReloader
+2024-05-26 15:40:19,200 INFO autoreload Watching for file changes with StatReloader
+2024-05-26 15:41:08,426 INFO autoreload Watching for file changes with StatReloader
+2024-05-26 15:42:15,001 INFO autoreload C:\SkillFactory\Django_proj\SkillFactory\SkillFactory\news_portal\project\project\settings.py changed, reloading.
+2024-05-26 15:42:18,008 INFO autoreload Watching for file changes with StatReloader
