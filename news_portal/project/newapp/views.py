@@ -16,6 +16,10 @@ from .forms import PostForm
 
 from .tasks import send_email_task, weekly_send_email_task
 from django.utils.translation import gettext as _ # импортируем функцию для перевода
+from django.utils import timezone
+from django.shortcuts import redirect
+import pytz #  импортируем стандартный модуль для работы с часовыми поясами
+
 
 
 class PostsList(ListView):
@@ -25,6 +29,16 @@ class PostsList(ListView):
     context_object_name = 'news'
     paginate_by = 3
 
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['time_now'] = datetime.utcnow()
+        context['current_time'] = timezone.localtime(timezone.now())
+        context['timezones'] = pytz.common_timezones
+        return context
+
+    def post(self, request):
+        request.session['django_timezone'] = request.POST['timezone']
+        return redirect(self.request.path)
 
 class PostDetail(DetailView):
     model = Post
@@ -120,8 +134,17 @@ def subscriptions(request):
 
 # Create your views here.
 
-class Index(View):
-    def get(self, request):
-        string = _('Hello world')
-
-        return HttpResponse(string)
+# class Index(View):
+#     def get(self, request):
+#         models = Post.objects.all()
+#         context = {
+#             'models': models,
+#             'current_time': timezone.localtime(timezone.now()),
+#             'timezones': pytz.common_timezones
+#         }
+#         return HttpResponse(render(request, 'news.html', context))
+#
+#         #  по пост-запросу будем добавлять в сессию часовой пояс, который и будет обрабатываться написанным нами ранее middleware
+#     def post(self, request):
+#         request.session['django_timezone'] = request.POST['timezone']
+#         return redirect('/')
