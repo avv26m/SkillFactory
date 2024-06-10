@@ -2,6 +2,9 @@ from django.urls import path
 
 from .views import PostsList, PostDetail, PostsSearch, PostCreate, PostUpdate, PostDelete, subscriptions
 
+
+
+
 urlpatterns = [
 
     path('posts/', PostsList.as_view(), name='posts'),

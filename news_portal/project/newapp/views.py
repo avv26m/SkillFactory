@@ -10,16 +10,17 @@ from django.db.models import Exists, OuterRef
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_protect
 
-from .models import Post, Subscription, Category
+from .models import Post, Subscription, Category, Author, PostCategory, Comment
 from .filters import PostFilter
 from .forms import PostForm
+from rest_framework import viewsets, permissions
+from .serializers import NewsSerializer, ArticlesSerializer, AutorSerializer, CategorySerializer
 
 from .tasks import send_email_task, weekly_send_email_task
-from django.utils.translation import gettext as _ # импортируем функцию для перевода
+from django.utils.translation import gettext as _  # импортируем функцию для перевода
 from django.utils import timezone
 from django.shortcuts import redirect
-import pytz #  импортируем стандартный модуль для работы с часовыми поясами
-
+import pytz  # импортируем стандартный модуль для работы с часовыми поясами
 
 
 class PostsList(ListView):
@@ -40,6 +41,7 @@ class PostsList(ListView):
         request.session['django_timezone'] = request.POST['timezone']
         return redirect(self.request.path)
 
+
 class PostDetail(DetailView):
     model = Post
     template_name = 'post.html'
@@ -49,6 +51,7 @@ class PostDetail(DetailView):
         context = super().get_context_data(**kwargs)
         context['time_now'] = datetime.utcnow()
         return context
+
 
 class PostsSearch(ListView):
     model = Post
@@ -67,13 +70,15 @@ class PostsSearch(ListView):
         context['filterset'] = self.filterset
         return context
 
+
 class PostCreate(PermissionRequiredMixin, CreateView):
     permission_required = ('newapp.add_post',)
-   # raise_exception = True
+    # raise_exception = True
     form_class = PostForm
     model = Post
     template_name = 'post_create.html'
     context_object_name = 'create'
+
     # success_url = reverse_lazy('posts')
 
     def form_valid(self, form):
@@ -86,12 +91,14 @@ class PostCreate(PermissionRequiredMixin, CreateView):
             send_email_task.delay(post.pk)
         return super().form_valid(form)
 
+
 class PostDelete(DeleteView):
     permission_required = ('newapp.delete_post',)
     model = Post
     template_name = 'post_delete.html'
     context_object_name = 'delete'
     success_url = reverse_lazy('posts')
+
 
 class PostUpdate(UpdateView):
     permission_required = ('newapp.change_post',)
@@ -100,6 +107,7 @@ class PostUpdate(UpdateView):
     template_name = 'post_edit.html'
     context_object_name = 'post'
     success_url = reverse_lazy('posts')
+
 
 @login_required
 @csrf_protect
@@ -148,3 +156,26 @@ def subscriptions(request):
 #     def post(self, request):
 #         request.session['django_timezone'] = request.POST['timezone']
 #         return redirect('/')
+
+class NewsViewset(viewsets.ModelViewSet):
+    queryset = Post.objects.filter(post_type='NW')
+    serializer_class = NewsSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+
+class ArticlesViewset(viewsets.ModelViewSet):
+    queryset = Post.objects.filter(post_type='AR')
+    serializer_class = ArticlesSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+
+class AuthorViewset(viewsets.ModelViewSet):
+    queryset = Author.objects.all()
+    serializer_class = AutorSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+
+class CategoryViewset(viewsets.ModelViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
