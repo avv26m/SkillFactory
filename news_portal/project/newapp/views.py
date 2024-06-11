@@ -158,13 +158,13 @@ def subscriptions(request):
 #         return redirect('/')
 
 class NewsViewset(viewsets.ModelViewSet):
-    queryset = Post.objects.filter(post_type='NW')
+    queryset = Post.objects.filter(categoryType='NW')
     serializer_class = NewsSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 
 class ArticlesViewset(viewsets.ModelViewSet):
-    queryset = Post.objects.filter(post_type='AR')
+    queryset = Post.objects.filter(categoryType='AR')
     serializer_class = ArticlesSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 

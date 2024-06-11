@@ -3,11 +3,11 @@ from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import TemplateView
 from rest_framework import routers
-from ..newapp import views
+from newapp import views
 
 router = routers.DefaultRouter()
-router.register(r'news', views.NewsViewset)
-router.register(r'articles', views.ArticlesViewset)
+router.register(r'news', views.NewsViewset, basename='news')
+router.register(r'articles', views.ArticlesViewset, basename='articles')
 
 
 urlpatterns = [
@@ -20,4 +20,7 @@ urlpatterns = [
     path('', include('newapp.urls')),
     path("accounts/", include("allauth.urls")),
     path('i18n/', include('django.conf.urls.i18n')),
+    path('', include(('newapp.urls'))),
+    path('api/', include(router.urls)),
+    # path('api-own/', include('api.urls')),
 ]
